@@ -1,7 +1,7 @@
 package ku.cs.kafe.controller;
 
 
-import ku.cs.kafe.entity.Member;
+import ku.cs.kafe.model.SignupRequest;
 import ku.cs.kafe.service.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,11 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.modelmapper.ModelMapper;
 
 @Controller
 public class SignupController {
-
 
     @Autowired
     private SignupService signupService;
@@ -25,11 +24,11 @@ public class SignupController {
 
 
     @PostMapping("/signup")
-    public String signupUser(@ModelAttribute Member user, Model model) {
+    public String signupUser(@ModelAttribute SignupRequest user,
+                             Model model) {
 
 
         if (signupService.isUsernameAvailable(user.getUsername())) {
-
             signupService.createUser(user);
             model.addAttribute("signupSuccess", true);
         } else {
