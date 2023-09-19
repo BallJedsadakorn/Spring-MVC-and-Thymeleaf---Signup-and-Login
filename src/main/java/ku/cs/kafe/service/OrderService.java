@@ -19,6 +19,9 @@ import java.util.UUID;
 
 @Service
 public class OrderService {
+    public List<PurchaseOrder> getAllOrders() {
+        return orderRepository.findAll();
+    }
 
 
     @Autowired
@@ -35,33 +38,13 @@ public class OrderService {
 
     private UUID currentOrderId;
 
-    public List<PurchaseOrder> getAllOrders() {
-        return orderRepository.findAll();
-    }
-    public PurchaseOrder getById(UUID orderId) {
-        return orderRepository.findById(orderId).get();
-    }
 
-
-    public void finishOrder(UUID orderId) {
-        PurchaseOrder record = orderRepository.findById(orderId).get();
-        record.setStatus(Status.FINISH);
-        orderRepository.save(record);
-    }
     public void createNewOrder() {
         PurchaseOrder newOrder = new PurchaseOrder();
         newOrder.setStatus(Status.ORDER);
         PurchaseOrder record = orderRepository.save(newOrder);
         currentOrderId = record.getId();
     }
-
-    public PurchaseOrder getCurrentOrder() {
-        if (currentOrderId == null)
-            createNewOrder();
-        return orderRepository.findById(currentOrderId).get();
-    }
-
-
     public void submitOrder() {
         PurchaseOrder currentOrder =
                 orderRepository.findById(currentOrderId).get();
@@ -71,6 +54,21 @@ public class OrderService {
         currentOrderId = null;
     }
 
+    public PurchaseOrder getCurrentOrder() {
+        if (currentOrderId == null)
+            createNewOrder();
+        return orderRepository.findById(currentOrderId).get();
+    }
+
+
+    public PurchaseOrder getById(UUID orderId) {
+        return orderRepository.findById(orderId).get();
+    }
+    public void finishOrder(UUID orderId) {
+        PurchaseOrder record = orderRepository.findById(orderId).get();
+        record.setStatus(Status.FINISH);
+        orderRepository.save(record);
+    }
     public void order(UUID menuId, AddCartRequest request) {
         if (currentOrderId == null)
             createNewOrder();

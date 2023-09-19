@@ -26,15 +26,12 @@ public class OrderController {
         return "cart";
     }
 
-
     @PostMapping
     public String submitOrder(Model model) {
         orderService.submitOrder();
         model.addAttribute("confirmOrder", true);
         return "home";
     }
-
-
 
     @PostMapping("/{menuId}")
     public String order(@PathVariable UUID menuId,
